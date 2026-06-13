@@ -1,0 +1,48 @@
+openapi: 3.0.3
+info:
+  title: AltinAPI - Türkiye Altın & Döviz Kuru API
+  description: >
+    Canlı gram altın, has altın, çeyrek, döviz (USD/EUR/GBP) kurları.
+    Türkiye kuyumcu/kapalıçarşı verisi, çoklu kaynak, REST + WebSocket.
+  version: "1.0.0"
+  contact:
+    name: Hasfiyat
+    url: https://altinapi.hasfiyat.com
+servers:
+  - url: https://altinapi.hasfiyat.com
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+paths:
+  /api/prices:
+    get:
+      operationId: getPrices
+      summary: Canlı altın ve döviz fiyatları
+      description: Gram altın, has altın, çeyrek, döviz kurlarını döner. İsteğe bağlı kaynak seçimi.
+      parameters:
+        - name: source
+          in: query
+          required: false
+          description: "Veri kaynağı (ör. harem, hakan, nadir, agora, mayda...)"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Güncel fiyatlar
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  gram_altin: { type: number, example: 4250.5 }
+                  has_altin: { type: number, example: 4255.0 }
+                  ceyrek: { type: number, example: 7050.0 }
+                  USD: { type: number, example: 38.42 }
+                  EUR: { type: number, example: 41.10 }
+                  updated_at: { type: string, format: date-time }
+        "401":
+          description: Geçersiz veya eksik API anahtarı
